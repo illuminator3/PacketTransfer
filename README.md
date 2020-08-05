@@ -4,7 +4,6 @@
 [![GitHub forks](https://img.shields.io/github/forks/illuminator3/PacketTransfer)](https://github.com/illuminator3/PacketTransfer/network)
 [![GitHub stars](https://img.shields.io/github/stars/illuminator3/PacketTransfer)](https://github.com/illuminator3/PacketTransfer/stargazers)
 [![GitHub license](https://img.shields.io/github/license/illuminator3/PacketTransfer)](https://github.com/illuminator3/PacketTransfer/blob/master/LICENSE)
-![repo-size](https://img.shields.io/github/repo-size/illuminator3/PacketTransfer)
 ![dependencies](https://img.shields.io/badge/dependencies-none-lightgrey)
 [![discord](https://img.shields.io/badge/discord-%2Aclick%2A-9cf)](https://discord.gg/yfBgMEa)
 [![contact](https://img.shields.io/badge/contact-hardt--j%40web.de-blueviolet)](mailto:hardt-j@web.de)
