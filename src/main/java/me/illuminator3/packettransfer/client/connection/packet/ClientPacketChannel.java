@@ -35,6 +35,9 @@ public class ClientPacketChannel
         PacketHandler handler = client.getPacketHandler();
         int id = handler.getId(packet);
 
+        if (id == -1)
+            throw new IllegalArgumentException("Cannot serialize unregistered packet");
+
         PacketEncoder encoder = client.getEncoder();
         String s = encoder.encode(writer, id);
 
@@ -106,7 +109,7 @@ public class ClientPacketChannel
                         }
 
                         if (packet == null)
-                            throw new NoSuchMethodException("No default constructor defined");
+                            throw new NoSuchMethodException("No default constructor defined for packet " + dec.getId());
                     } catch (NoSuchMethodException ex)
                     {
                         ex.printStackTrace();

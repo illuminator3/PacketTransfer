@@ -37,6 +37,9 @@ public class ClientChannel
         PacketHandler handler = server.getPacketHandler();
         int id = handler.getId(packet);
 
+        if (id == -1)
+            throw new IllegalArgumentException("Cannot serialize unregistered packet");
+
         PacketEncoder encoder = server.getEncoder();
         String s = encoder.encode(writer, id);
 

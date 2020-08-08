@@ -121,7 +121,7 @@ public class PacketServer
                                     }
 
                                     if (packet == null)
-                                        throw new NoSuchMethodException("No default constructor defined");
+                                        throw new NoSuchMethodException("No default constructor defined for packet " + dec.getId());
                                 } catch (NoSuchMethodException ex)
                                 {
                                     ex.printStackTrace();
