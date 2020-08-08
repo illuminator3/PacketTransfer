@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class PacketServer
 {
@@ -25,6 +27,7 @@ public class PacketServer
     private PacketDecoder decoder;
     private final List<Client> connectedClients = new ArrayList<>();
     private final List<Consumer<Client>> connectListeners = new ArrayList<>();
+    private final List<Function<Client, Boolean>> disconnectHandlers = new ArrayList<>();
     private Thread readThread;
     private final Runnable defaultRead;
 
@@ -112,9 +115,19 @@ public class PacketServer
         };
     }
 
-    public void disconnectMe(Client me)
+    public boolean disconnectMe(Client me)
     {
-        this.connectedClients.remove(me);
+        AtomicBoolean disconnect = new AtomicBoolean(true);
+
+        this.disconnectHandlers.forEach(f -> {
+            if (f.apply(me))
+                disconnect.set(false);
+        });
+
+        if (disconnect.get())
+            this.connectedClients.remove(me);
+
+        return disconnect.get();
     }
 
     public void disconnect()
@@ -169,6 +182,11 @@ public class PacketServer
     public void onConnect(Consumer<Client> consumer)
     {
         this.connectListeners.add(consumer);
+    }
+
+    public void addDisconnectHandler(Function<Client, Boolean> handler)
+    {
+        this.disconnectHandlers.add(handler);
     }
 
     public int getPort()

@@ -55,9 +55,10 @@ public class ClientChannel
     public void close()
         throws IOException
     {
-        this.dataOutputStream.close();
-        this.client.getSocket().close();
-
-        this.server.disconnectMe(this.client);
+        if (this.server.disconnectMe(this.client))
+        {
+            this.dataOutputStream.close();
+            this.client.getSocket().close();
+        }
     }
 }
