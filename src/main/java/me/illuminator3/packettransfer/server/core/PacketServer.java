@@ -25,6 +25,8 @@ public class PacketServer
     private PacketDecoder decoder;
     private final List<Client> connectedClients = new ArrayList<>();
     private final List<Consumer<Client>> connectListeners = new ArrayList<>();
+    private Thread readThread;
+    private final Runnable defaultRead;
 
     public PacketServer(int port)
     {
@@ -32,55 +34,14 @@ public class PacketServer
 
         this.encoder = new SimplePacketEncoder();
         this.decoder = new SimplePacketDecoder();
-    }
 
-    public void disconnect()
-        throws IOException
-    {
-        if (!isConnected())
-        {
-            connected = false;
-        }
-        else
-            throw new IOException("Server is already disconnected");
-
-        Runtime.getRuntime().exit(0);
-    }
-
-    public boolean isConnected()
-    {
-        return this.connected;
-    }
-
-    public void setPacketHandler(PacketHandler handler)
-    {
-        this.packetHandler = handler;
-
-        this.packetHandler.registerPackets();
-    }
-
-    public PacketHandler getPacketHandler()
-    {
-        return packetHandler;
-    }
-
-    public void connect()
-        throws IOException
-    {
-        if (packetHandler == null)
-            throw new IOException("Can't connect without a packet handler");
-
-        if (this.isConnected())
-            throw new IOException("Already connected");
-
-        this.connected = true;
-
-        new Thread(() -> {
+        this.defaultRead = () -> {
             try
             {
                 ServerSocket server = new ServerSocket(port);
                 ExecutorService service = Executors.newCachedThreadPool();
 
+                //noinspection InfiniteLoopStatement
                 while (true)
                 {
                     Socket s = server.accept();
@@ -148,7 +109,61 @@ public class PacketServer
             {
                 ex.printStackTrace();
             }
-        }).start();
+        };
+    }
+
+    public void disconnectMe(Client me)
+    {
+        this.connectedClients.remove(me);
+    }
+
+    public void disconnect()
+        throws IOException
+    {
+        if (!isConnected())
+            connected = false;
+        else
+            throw new IllegalStateException("Server is not connected");
+
+        for (Client client : connectedClients)
+            client.getChannel().close();
+
+        this.readThread.interrupt();
+        this.readThread = null;
+
+        System.gc();
+    }
+
+    public boolean isConnected()
+    {
+        return this.connected;
+    }
+
+    public void setPacketHandler(PacketHandler handler)
+    {
+        this.packetHandler = handler;
+
+        this.packetHandler.registerPackets();
+    }
+
+    public PacketHandler getPacketHandler()
+    {
+        return packetHandler;
+    }
+
+    public void connect()
+        throws IOException
+    {
+        if (packetHandler == null)
+            throw new IOException("Can't connect without a packet handler");
+
+        if (this.isConnected())
+            throw new IOException("Already connected");
+
+        this.connected = true;
+
+        this.readThread = new Thread(defaultRead);
+        this.readThread.start();
     }
 
     public void onConnect(Consumer<Client> consumer)

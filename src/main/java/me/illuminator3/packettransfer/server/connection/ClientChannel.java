@@ -57,5 +57,7 @@ public class ClientChannel
     {
         this.dataOutputStream.close();
         this.client.getSocket().close();
+
+        this.server.disconnectMe(this.client);
     }
 }
