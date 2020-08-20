@@ -3,7 +3,7 @@ package me.illuminator3.packettransfer.packet.pre;
 import me.illuminator3.packettransfer.data.DataReader;
 import me.illuminator3.packettransfer.packet.DecodedPacket;
 import me.illuminator3.packettransfer.packet.PacketDecoder;
-import me.illuminator3.packettransfer.packet.data.PacketDataWriter;
+import me.illuminator3.packettransfer.packet.data.PacketDataReader;
 
 public class SimplePacketDecoder
     extends PacketDecoder
@@ -27,11 +27,7 @@ public class SimplePacketDecoder
         String idVal = s[0];
         int id = Integer.parseInt(idVal);
         String d = s[1];
-        PacketDataWriter w = new PacketDataWriter();
-
-        w.fromString(d);
-
-        DataReader r = w.toDataReader();
+        DataReader reader = new PacketDataReader(d);
 
         return new DecodedPacket()
         {
@@ -44,7 +40,7 @@ public class SimplePacketDecoder
             @Override
             public DataReader getData()
             {
-                return r;
+                return reader;
             }
         };
     }

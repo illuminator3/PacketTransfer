@@ -23,6 +23,11 @@ public class PacketDataWriter
 
     }
 
+    public PacketDataWriter(String s)
+    {
+        fromString(s);
+    }
+
     public PacketDataWriter(HList<String> strings, HList<Integer> ints, HList<Long> longs, HList<Short> shorts, HList<Byte> bytes)
     {
         this.strings = strings;

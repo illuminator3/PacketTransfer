@@ -19,6 +19,11 @@ public class PacketDataReader
 
     }
 
+    public PacketDataReader(String s)
+    {
+        fromString(s);
+    }
+
     public PacketDataReader(HList<String> strings, HList<Integer> ints, HList<Long> longs, HList<Short> shorts, HList<Byte> bytes)
     {
         this.strings = strings;
