@@ -56,13 +56,13 @@ class ClientTest
         }
 
         @Override
-        public void readData(DataReader reader) throws IOException
+        public void readData(DataReader reader)
         {
             this.message = reader.readString();
         }
 
         @Override
-        public void writeData(DataWriter writer) throws IOException
+        public void writeData(DataWriter writer)
         {
             writer.writeString(message);
         }
