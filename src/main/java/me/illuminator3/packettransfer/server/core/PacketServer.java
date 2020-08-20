@@ -4,6 +4,7 @@ import me.illuminator3.packettransfer.packet.*;
 import me.illuminator3.packettransfer.packet.pre.SimplePacketDecoder;
 import me.illuminator3.packettransfer.packet.pre.SimplePacketEncoder;
 import me.illuminator3.packettransfer.server.Client;
+import me.illuminator3.packettransfer.server.impl.ServerImpl;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class PacketServer
+    implements ServerImpl
 {
     private final int port;
     private boolean connected;
@@ -115,6 +117,7 @@ public class PacketServer
         };
     }
 
+    @Override
     public boolean disconnectMe(Client me)
     {
         AtomicBoolean disconnect = new AtomicBoolean(true);
@@ -130,6 +133,7 @@ public class PacketServer
         return disconnect.get();
     }
 
+    @Override
     public void disconnect()
         throws IOException
     {
@@ -147,11 +151,13 @@ public class PacketServer
         System.gc();
     }
 
+    @Override
     public boolean isConnected()
     {
         return this.connected;
     }
 
+    @Override
     public void setPacketHandler(PacketHandler handler)
     {
         this.packetHandler = handler;
@@ -159,11 +165,13 @@ public class PacketServer
         this.packetHandler.registerPackets();
     }
 
+    @Override
     public PacketHandler getPacketHandler()
     {
         return packetHandler;
     }
 
+    @Override
     public void connect()
         throws IOException
     {
@@ -179,41 +187,49 @@ public class PacketServer
         this.readThread.start();
     }
 
+    @Override
     public void onConnect(Consumer<Client> consumer)
     {
         this.connectListeners.add(consumer);
     }
 
+    @Override
     public void addDisconnectHandler(Function<Client, Boolean> handler)
     {
         this.disconnectHandlers.add(handler);
     }
 
+    @Override
     public int getPort()
     {
         return port;
     }
 
+    @Override
     public PacketEncoder getEncoder()
     {
         return encoder;
     }
 
+    @Override
     public void setEncoder(PacketEncoder encoder)
     {
         this.encoder = encoder;
     }
 
+    @Override
     public PacketDecoder getDecoder()
     {
         return decoder;
     }
 
+    @Override
     public void setDecoder(PacketDecoder decoder)
     {
         this.decoder = decoder;
     }
 
+    @Override
     public List<Client> getConnectedClients()
     {
         return connectedClients;

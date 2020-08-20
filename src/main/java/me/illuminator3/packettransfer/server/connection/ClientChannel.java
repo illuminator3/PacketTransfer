@@ -6,7 +6,7 @@ import me.illuminator3.packettransfer.packet.PacketEncoder;
 import me.illuminator3.packettransfer.packet.PacketHandler;
 import me.illuminator3.packettransfer.packet.data.PacketDataWriter;
 import me.illuminator3.packettransfer.server.Client;
-import me.illuminator3.packettransfer.server.core.PacketServer;
+import me.illuminator3.packettransfer.server.impl.ServerImpl;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -15,15 +15,16 @@ public class ClientChannel
     implements PacketChannel
 {
     private final Client client;
-    private final PacketServer server;
+    private final ServerImpl server;
     private DataOutputStream dataOutputStream;
 
-    public ClientChannel(Client client, PacketServer server)
+    public ClientChannel(Client client, ServerImpl server)
     {
         this.client = client;
         this.server = server;
     }
 
+    @Override
     public void write(Packet packet)
         throws IOException
     {
@@ -46,12 +47,14 @@ public class ClientChannel
         dataOutputStream.writeUTF(s);
     }
 
+    @Override
     public void open()
         throws UnsupportedOperationException
     {
         throw new UnsupportedOperationException("Not supported");
     }
 
+    @Override
     public void close()
         throws IOException
     {

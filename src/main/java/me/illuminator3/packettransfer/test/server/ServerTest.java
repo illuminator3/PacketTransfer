@@ -1,12 +1,13 @@
 package me.illuminator3.packettransfer.test.server;
 
-import me.illuminator3.packettransfer.client.core.PacketClient;
+import me.illuminator3.packettransfer.client.impl.ClientImpl;
 import me.illuminator3.packettransfer.packet.pre.PrePacketHandler;
 import me.illuminator3.packettransfer.data.DataReader;
 import me.illuminator3.packettransfer.data.DataWriter;
 import me.illuminator3.packettransfer.packet.Packet;
 import me.illuminator3.packettransfer.server.Client;
 import me.illuminator3.packettransfer.server.core.PacketServer;
+import me.illuminator3.packettransfer.server.impl.ServerImpl;
 
 import java.io.IOException;
 
@@ -16,7 +17,7 @@ class ServerTest
     {
         System.out.println("Starting...");
 
-        PacketServer server = new PacketServer(7664);
+        ServerImpl server = new PacketServer(7664);
 
         PrePacketHandler packetHandler = new PrePacketHandler();
 
@@ -67,13 +68,13 @@ class ServerTest
         }
 
         @Override
-        public void handleClientSide(PacketClient client)
+        public void handleClientSide(ClientImpl client)
         {
             System.out.println(message);
         }
 
         @Override
-        public void handleServerSide(Client client, PacketServer server)
+        public void handleServerSide(Client client, ServerImpl server)
         {
             System.out.println(message);
         }

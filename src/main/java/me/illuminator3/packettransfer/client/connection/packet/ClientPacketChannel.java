@@ -1,6 +1,6 @@
 package me.illuminator3.packettransfer.client.connection.packet;
 
-import me.illuminator3.packettransfer.client.core.PacketClient;
+import me.illuminator3.packettransfer.client.impl.ClientImpl;
 import me.illuminator3.packettransfer.packet.*;
 import me.illuminator3.packettransfer.packet.data.PacketDataWriter;
 
@@ -14,17 +14,18 @@ import java.net.Socket;
 public class ClientPacketChannel
     implements PacketChannel
 {
-    private final PacketClient client;
+    private final ClientImpl client;
     private boolean open;
     private Socket socket;
     private DataOutputStream dataOutputStream;
     private Thread readThread;
 
-    public ClientPacketChannel(PacketClient client)
+    public ClientPacketChannel(ClientImpl client)
     {
         this.client = client;
     }
 
+    @Override
     public void write(Packet packet)
         throws IOException
     {
@@ -44,6 +45,7 @@ public class ClientPacketChannel
         dataOutputStream.writeUTF(s);
     }
 
+    @Override
     public void open()
         throws IOException
     {
@@ -133,6 +135,7 @@ public class ClientPacketChannel
         readThread.start();
     }
 
+    @Override
     public void close()
         throws IOException
     {

@@ -1,6 +1,8 @@
 package me.illuminator3.packettransfer.client.core;
 
 import me.illuminator3.packettransfer.client.connection.ClientConnection;
+import me.illuminator3.packettransfer.client.impl.ClientImpl;
+import me.illuminator3.packettransfer.client.impl.Connection;
 import me.illuminator3.packettransfer.packet.PacketDecoder;
 import me.illuminator3.packettransfer.packet.PacketEncoder;
 import me.illuminator3.packettransfer.packet.PacketHandler;
@@ -11,12 +13,13 @@ import me.illuminator3.packettransfer.utils.exceptions.ConnectionError;
 import java.io.IOException;
 
 public class PacketClient
+    implements ClientImpl
 {
     private final String host;
     private final int port;
 
     private boolean connected;
-    private ClientConnection connection;
+    private Connection connection;
     private PacketHandler packetHandler;
     private PacketEncoder encoder;
     private PacketDecoder decoder;
@@ -30,6 +33,7 @@ public class PacketClient
         this.decoder = new SimplePacketDecoder();
     }
 
+    @Override
     public void disconnect()
         throws IOException
     {
@@ -43,6 +47,7 @@ public class PacketClient
             throw new IOException("Client is already disconnected");
     }
 
+    @Override
     public boolean isConnected()
     {
         if (this.connected && this.connection == null)
@@ -53,11 +58,13 @@ public class PacketClient
         return this.connected;
     }
 
-    public ClientConnection getConnection()
+    @Override
+    public Connection getConnection()
     {
         return connection;
     }
 
+    @Override
     public void setPacketHandler(PacketHandler handler)
     {
         this.packetHandler = handler;
@@ -65,11 +72,13 @@ public class PacketClient
         this.packetHandler.registerPackets();
     }
 
+    @Override
     public PacketHandler getPacketHandler()
     {
         return packetHandler;
     }
 
+    @Override
     public void connect()
         throws IOException
     {
@@ -86,31 +95,37 @@ public class PacketClient
         this.connected = true;
     }
 
+    @Override
     public int getPort()
     {
         return port;
     }
 
+    @Override
     public String getHost()
     {
         return host;
     }
 
+    @Override
     public PacketEncoder getEncoder()
     {
         return encoder;
     }
 
+    @Override
     public void setEncoder(PacketEncoder encoder)
     {
         this.encoder = encoder;
     }
 
+    @Override
     public PacketDecoder getDecoder()
     {
         return decoder;
     }
 
+    @Override
     public void setDecoder(PacketDecoder decoder)
     {
         this.decoder = decoder;
